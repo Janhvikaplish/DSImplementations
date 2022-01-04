@@ -1,77 +1,88 @@
-public class BuildHeap {
- 
-    // To heapify a subtree rooted with node i which is
-    // an index in arr[].Nn is size of heap
-    static void heapify(int arr[], int n, int i)
-    {
-        int largest = i; // Initialize largest as root
-        int l = 2 * i + 1; // left = 2*i + 1
-        int r = 2 * i + 2; // right = 2*i + 2
- 
-        // If left child is larger than root
-        if (l < n && arr[l] > arr[largest])
-            largest = l;
- 
-        // If right child is larger than largest so far
-        if (r < n && arr[r] > arr[largest])
-            largest = r;
- 
-        // If largest is not root
-        if (largest != i) {
-            int swap = arr[i];
-            arr[i] = arr[largest];
-            arr[largest] = swap;
- 
-            // Recursively heapify the affected sub-tree
-            heapify(arr, n, largest);
-        }
+// Priority Queue implementation in Java
+
+import java.util.ArrayList;
+
+class Heap {
+  // Function to heapify the tree
+  void heapify(ArrayList<Integer> hT, int i) {
+    int size = hT.size();
+    // Find the largest among root, left child and right child
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    if (l < size && hT.get(l) > hT.get(largest))
+      largest = l;
+    if (r < size && hT.get(r) > hT.get(largest))
+      largest = r;
+
+    // Swap and continue heapifying if root is not largest
+    if (largest != i) {
+      int temp = hT.get(largest);
+      hT.set(largest, hT.get(i));
+      hT.set(i, temp);
+
+      heapify(hT, largest);
     }
- 
-    // Function to build a Max-Heap from the Array
-    static void buildHeap(int arr[], int n)
-    {
-        // Index of last non-leaf node
-        int startIdx = (n / 2) - 1;
- 
-        // Perform reverse level order traversal
-        // from last non-leaf node and heapify
-        // each node
-        for (int i = startIdx; i >= 0; i--) {
-            heapify(arr, n, i);
-        }
+  }
+
+  // Function to insert an element into the tree
+  void insert(ArrayList<Integer> hT, int newNum) {
+    int size = hT.size();
+    if (size == 0) {
+      hT.add(newNum);
+    } else {
+      hT.add(newNum);
+      for (int i = size / 2 - 1; i >= 0; i--) {
+        heapify(hT, i);
+      }
     }
- 
-    // A utility function to print the array
-    // representation of Heap
-    static void printHeap(int arr[], int n)
-    {
-        System.out.println(
-            "Array representation of Heap is:");
- 
-        for (int i = 0; i < n; ++i)
-            System.out.print(arr[i] + " ");
- 
-        System.out.println();
+  }
+
+  // Function to delete an element from the tree
+  void deleteNode(ArrayList<Integer> hT, int num) {
+    int size = hT.size();
+    int i;
+    for (i = 0; i < size; i++) {
+      if (num == hT.get(i))
+        break;
     }
- 
-    // Driver Code
-    public static void main(String args[])
-    {
-        // Binary Tree Representation
-        // of input array
-        // 1
-        //           /     \
-        // 3         5
-        //      /    \     /  \
-        // 4      6   13  10
-        //    / \    / \
-        // 9   8  15 17
-        int arr[] = { 1, 3, 5, 4, 6, 13, 10, 9, 8, 15, 17 };
- 
-        int n = arr.length;
- 
-        buildHeap(arr, n);
- 
-        printHeap(arr, n);
+
+    int temp = hT.get(i);
+    hT.set(i, hT.get(size - 1));
+    hT.set(size - 1, temp);
+
+    hT.remove(size - 1);
+    for (int j = size / 2 - 1; j >= 0; j--) {
+      heapify(hT, j);
     }
+  }
+
+  // Print the tree
+  void printArray(ArrayList<Integer> array, int size) {
+    for (Integer i : array) {
+      System.out.print(i + " ");
+    }
+    System.out.println();
+  }
+
+  // Driver code
+  public static void main(String args[]) {
+
+    ArrayList<Integer> array = new ArrayList<Integer>();
+    int size = array.size();
+
+    Heap h = new Heap();
+    h.insert(array, 3);
+    h.insert(array, 4);
+    h.insert(array, 9);
+    h.insert(array, 5);
+    h.insert(array, 2);
+
+    System.out.println("Max-Heap array: ");
+    h.printArray(array, size);
+
+    h.deleteNode(array, 4);
+    System.out.println("After deleting an element: ");
+    h.printArray(array, size);
+  }
 }
